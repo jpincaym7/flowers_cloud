@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise ;)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌻</text></svg>">
+    <style>
+        @keyframes falling {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .flower {
+            position: fixed;
+            font-size: 24px;
+            user-select: none;
+            animation: falling 5s linear infinite;
+        }
+        .surprise-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+        }
+        .surprise-content.show {
+            max-height: 1000px;
+            opacity: 1;
+        }
+        @media (max-width: 640px) {
+            .flower {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-yellow-100 to-yellow-300 min-h-screen flex items-center justify-center overflow-x-hidden px-4">
+    <div class="text-center z-10 bg-white bg-opacity-80 p-4 sm:p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-600 mb-4 sm:mb-6">Feliz Día del Programador(a)</h1>
+        <p class="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8">Para ti, programadora en desarrollo 💛</p>
+        <button id="surpriseBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base">
+            Ver Sorpresa
+        </button>
+        <div id="surpriseContent1" class="surprise-content mt-4 sm:mt-6">
+            <p id="message1" class="text-lg sm:text-xl text-gray-800 mb-3 sm:mb-4">También toma una flor amarilla, cosita 🌼</p>
+            <img src="cs_image.jpg" alt="Imagen sorpresa 1" class="w-full h-auto rounded-lg shadow-md" />
+        </div>
+        <div id="surpriseContent2" class="surprise-content mt-4 sm:mt-6">
+            <p id="message2" class="text-lg sm:text-xl text-gray-800 mb-3 sm:mb-4">Estas guapota mmm ziiiii</p>
+            <img src="fl_flower_2.jpg" alt="Imagen sorpresa 2" class="w-full h-auto rounded-lg shadow-md" />
+        </div>
+        <div id="surpriseContent3" class="surprise-content mt-4 sm:mt-6">
+            <p id="message3" class="text-lg sm:text-xl text-gray-800 mb-3 sm:mb-4">podrias ser el set de mi codigo SQL Uwu</p>
+            <img src="fl_flower_3.jpg" alt="Imagen sorpresa 3" class="w-full h-auto rounded-lg shadow-md" />
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="flower_mp3.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+        const flowers = ['🌻', '🌼', '💐', '🏵️'];
+        let flowerInterval;
+        let currentSurprise = 0;
+        const totalSurprises = 3;
+        const music = document.getElementById('backgroundMusic');
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+            flower.classList.add('flower');
+            flower.style.left = `${Math.random() * 100}vw`;
+            flower.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            document.body.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, 5000);
+        }
+
+        function startFlowerRain() {
+            if (!flowerInterval) {
+                flowerInterval = setInterval(createFlower, 300);
+            }
+        }
+
+        function stopFlowerRain() {
+            clearInterval(flowerInterval);
+            flowerInterval = null;
+        }
+
+        function showNextSurprise() {
+            for (let i = 1; i <= totalSurprises; i++) {
+                document.getElementById(`surpriseContent${i}`).classList.remove('show');
+            }
+            currentSurprise = (currentSurprise % totalSurprises) + 1;
+            document.getElementById(`surpriseContent${currentSurprise}`).classList.add('show');
+        }
+
+        document.getElementById('surpriseBtn').addEventListener('click', function() {
+            if (currentSurprise === 0) {
+                music.play().catch(e => console.log("Audio playback failed:", e));
+                startFlowerRain();
+            }
+            showNextSurprise();
+            
+            if (currentSurprise === totalSurprises) {
+                this.textContent = 'Reiniciar Sorpresa ;)';
+            } else {
+                this.textContent = 'Siguiente Sorpresa';
+            }
+        });
+
+        music.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play().catch(e => console.log("Audio loop failed:", e));
+        }, false);
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5HQhkvbGr4iCgLEEWFXMDvScRLcIYWAk",
+          authDomain: "flowers-day-sft.firebaseapp.com",
+          projectId: "flowers-day-sft",
+          storageBucket: "flowers-day-sft.appspot.com",
+          messagingSenderId: "1089765417136",
+          appId: "1:1089765417136:web:fa585071caaf0000e31b75",
+          measurementId: "G-H8YV80S7TY"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
+</body>
+</html>
